@@ -6,6 +6,12 @@ import VueRouter from 'vue-router'
 // 1.2 安装路由
 Vue.use(VueRouter)
 
+// 导入格式化时间插件
+import moment from 'moment'
+// 定义全局的过滤器
+Vue.filter('dateFormat',function(dataStr,pattern="YYYY-MM-DD HH:mm:ss"){
+return moment(dataStr).format(pattern)
+})
 // 导入vue axios
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -31,10 +37,11 @@ import './lib/mui/css/mui.min.css'
 import './lib/mui/css/icons-extra.css'
 
 // 按需导入mintUI
-import {Header,Swipe, SwipeItem} from 'mint-ui'
+import {Header,Swipe, SwipeItem,Button} from 'mint-ui'
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
 Vue.component(Header.name,Header)
+Vue.component(Button.name,Button)
 // import 'mint-ui/lib/style.css'
 
 // 1.3 导入自己的 router.js 路由模块
