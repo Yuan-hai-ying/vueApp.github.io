@@ -70,7 +70,9 @@ export default {
           content: this.msg.trim()
         })
         .then(function(result) {
+          console.log(result.data.status);
           if (result.data.status === 0) {
+            console.log(result);
             // 1. 拼接出一个评论对象
             var cmt = {
               user_name: "匿名用户",

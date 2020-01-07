@@ -37,11 +37,12 @@ import './lib/mui/css/mui.min.css'
 import './lib/mui/css/icons-extra.css'
 
 // 按需导入mintUI
-import {Header,Swipe, SwipeItem,Button} from 'mint-ui'
+import {Header,Swipe, SwipeItem,Button,Lazyload} from 'mint-ui'
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
 Vue.component(Header.name,Header)
 Vue.component(Button.name,Button)
+Vue.use(Lazyload);
 // import 'mint-ui/lib/style.css'
 
 // 1.3 导入自己的 router.js 路由模块
