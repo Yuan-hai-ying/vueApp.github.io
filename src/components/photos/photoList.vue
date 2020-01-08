@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div id="slider" class="mui-slider">
             <div id="sliderSegmentedControl"
                 class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
@@ -91,6 +91,12 @@
     * {
         touch-action: pan-y;
     }
+    .photo-list::-webkit-scrollbar {
+     width: 0 !important;
+   }
+   .photo-list::-webkit-scrollbar {
+     width: 0 !important;height: 0;
+   }
 
     img[lazy=loading] {
         width: 40px;

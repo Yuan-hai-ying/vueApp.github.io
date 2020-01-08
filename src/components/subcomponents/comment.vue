@@ -7,7 +7,7 @@
     <mt-button type="primary" size="large" @click="postComment">发表评论</mt-button>
 
     <div class="cmt-list">
-      <div class="cmt-item" v-for="(item, i) in comments" :key="item.add_time">
+      <div class="cmt-item" v-for="(item, i) in comments" :key="i">
         <div class="cmt-title">
           第{{ i+1 }}楼&nbsp;&nbsp;用户：{{ item.user_name }}&nbsp;&nbsp;发表时间：{{ item.add_time | dateFormat }}
         </div>
@@ -44,7 +44,19 @@ export default {
           if (result.data.status === 0) {
             // this.comments = result.body.message;
             // 每当获取新评论数据的时候，不要把老数据清空覆盖，而是应该以老数据，拼接上新数据
-            this.comments = this.comments.concat(result.data.message);
+            // this.comments = this.comments.concat(result.data.message);
+            if (result.data.message.length>0) {
+              this.comments = this.comments.concat(result.data.message);
+            }else {
+              if(this.comments.length==0){
+                
+              }else {
+                Toast("评论已经到底了！");
+              }
+              this.comments.length=0;
+              this.comments.length++;
+              console.log(this.comments);
+            }
           } else {
             Toast("获取评论失败！");
           }

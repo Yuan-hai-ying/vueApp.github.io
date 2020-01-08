@@ -44,7 +44,9 @@ Vue.component(Header.name,Header)
 Vue.component(Button.name,Button)
 Vue.use(Lazyload);
 // import 'mint-ui/lib/style.css'
-
+// 导入缩略图插件
+import VuePreview from 'vue2-preview'
+Vue.use(VuePreview)
 // 1.3 导入自己的 router.js 路由模块
 import router from './router.js'
 
