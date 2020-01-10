@@ -54,7 +54,7 @@
     methods: {
       getlunbo() {
         this.http.get("/api/getlunbo").then(result => {
-          console.log(result);
+          // console.log(result);
           if (result.data.status ===0) {
             // 成功了
             this.lunboList = result.data.message;

@@ -18,12 +18,12 @@ export default {
   mounted() {
     // 初始化数字选择框组件
     mui(".mui-numbox").numbox();
-    console.log(this.max);
+    // console.log(this.max);
   },
   methods: {
     countChanged() {
       // 每当 文本框的数据被修改的时候，立即把 最新的数据，通过事件调用，传递给父组件
-      // console.log(this.$refs.numbox.value);
+      // console.log(this.$refs);
       this.$emit("getcount", parseInt(this.$refs.numbox.value));
     }
   },
