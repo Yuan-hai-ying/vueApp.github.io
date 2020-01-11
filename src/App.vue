@@ -59,7 +59,6 @@
     background-color: red;
 
   }
-
   .app-container {
     padding: 40px 0 54px 0;
     overflow: hidden;

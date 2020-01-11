@@ -85,12 +85,14 @@ import {
     Swipe,
     SwipeItem,
     Button,
-    Lazyload
+    Lazyload,
+    Switch
 } from 'mint-ui'
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
+Vue.component(Switch.name, Switch)
 Vue.use(Lazyload);
 // import 'mint-ui/lib/style.css'
 // 导入缩略图插件
