@@ -33619,8 +33619,14 @@ exports.default = {
             this.axios.get('api/goods/getshopcarlist/' + shopcar.join()).then(function (res) {
                 if (res.data.status === 0) {
                     _this.carslist = res.data.message;
+                    // console.log(this.carslist);
                 }
             });
+        },
+        remove: function remove(e, i) {
+            //    console.log(e,i);
+            this.carslist.splice(i, 1);
+            this.$store.commit('removeForcar', e);
         }
     },
     components: {
@@ -34974,7 +34980,7 @@ var store = new _vuex2.default.Store({
             var flag = false;
             state.car.some(function (item) {
                 if (item.id === goodsinfo.id) {
-                    item.count += goodsinfo.count;
+                    item.count += parseInt(goodsinfo.count);
                     flag = true;
                     return true;
                 }
@@ -34984,6 +34990,25 @@ var store = new _vuex2.default.Store({
             }
 
             // 当 更新 car 之后，把 car 数组，存储到 本地的 localStorage 中
+            localStorage.setItem('car', (0, _stringify2.default)(state.car));
+        },
+        updateGoodsInfo: function updateGoodsInfo(state, goodsinfo) {
+            state.car.some(function (item) {
+                if (item.id === goodsinfo.id) {
+                    item.count = parseInt(goodsinfo.count);
+                    return true;
+                }
+            });
+            localStorage.setItem('car', (0, _stringify2.default)(state.car));
+        },
+        removeForcar: function removeForcar(state, id) {
+            state.car.some(function (item, i) {
+                // console.log(item);
+                if (item.id === id) {
+                    state.car.splice(i, 1);
+                    return true;
+                }
+            });
             localStorage.setItem('car', (0, _stringify2.default)(state.car));
         }
     },
@@ -34996,6 +35021,13 @@ var store = new _vuex2.default.Store({
                 c += item.count;
             });
             return c;
+        },
+        getcarCount: function getcarCount(state) {
+            var o = {};
+            state.car.forEach(function (item) {
+                o[item.id] = item.count;
+            });
+            return o;
         }
     }
 
@@ -43328,7 +43360,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.shop_container[data-v-21acea58] {\n  background-color: #eee;\n  overflow: hidden;\n}\n.good_list[data-v-21acea58] {\n  display: flex;\n  justify-content: space-around;\n}\n.good_list img[data-v-21acea58] {\n  height: 60px;\n  width: 60px;\n}\n.good_list .info[data-v-21acea58] {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n}\n.good_list .info p[data-v-21acea58] {\n  margin-bottom: 0;\n}\n.good_list .info p span[data-v-21acea58] {\n  color: red;\n  font-weight: bold;\n}\n.good_list .info h1[data-v-21acea58] {\n  font-weight: bold;\n  font-size: 13px;\n}\n", ""]);
+exports.push([module.i, "\n.shop_container[data-v-21acea58] {\n  background-color: #eee;\n  overflow: hidden;\n}\n.good_list[data-v-21acea58] {\n  display: flex;\n  justify-content: space-around;\n}\n.good_list img[data-v-21acea58] {\n  height: 60px;\n  width: 60px;\n  /* margin:0 2px; */\n}\n.good_list .info[data-v-21acea58] {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n}\n.good_list .info p[data-v-21acea58] {\n  margin-bottom: 0;\n}\n.good_list .info p span[data-v-21acea58] {\n  color: red;\n  font-weight: bold;\n}\n.good_list .info h1[data-v-21acea58] {\n  font-weight: bold;\n  font-size: 13px;\n}\n", ""]);
 
 // exports
 
@@ -44352,9 +44384,24 @@ var render = function() {
                   [
                     _c("span", [_vm._v("￥" + _vm._s(item.sell_price))]),
                     _vm._v(" "),
-                    _c("numbox"),
+                    _c("numbox", {
+                      attrs: {
+                        initcount: _vm.$store.getters.getcarCount[item.id],
+                        goodsid: item.id
+                      }
+                    }),
                     _vm._v(" "),
-                    _c("a", { attrs: { href: "" } }, [_vm._v("删除")])
+                    _c(
+                      "a",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.remove(item.id, i)
+                          }
+                        }
+                      },
+                      [_vm._v("删除")]
+                    )
                   ],
                   1
                 )

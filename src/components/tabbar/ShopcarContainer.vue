@@ -9,8 +9,8 @@
                         <h1>{{item.title}}</h1>
                         <p>
                             <span>￥{{ item.sell_price }}</span>
-                            <numbox></numbox>
-                            <a href="">删除</a>
+                            <numbox :initcount="$store.getters.getcarCount[item.id]" :goodsid="item.id"></numbox>
+                            <a @click="remove(item.id,i)">删除</a>
                         </p>
                     </div>
                 </div>
@@ -50,9 +50,16 @@
                     this.axios.get('api/goods/getshopcarlist/' + shopcar.join()).then(res => {
                         if (res.data.status === 0) {
                             this.carslist = res.data.message;
+                            // console.log(this.carslist);
                         }
                     })
+                },
+                remove(e,i){
+                //    console.log(e,i);
+                this.carslist.splice(i,1)
+                this.$store.commit('removeForcar',e)
                 }
+
             },
             components: {
                 numbox
@@ -71,7 +78,8 @@
 
             img {
                 height: 60px;
-                width: 60px;
+                width:60px;
+                /* margin:0 2px; */
             }
 
             .info {
