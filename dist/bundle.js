@@ -33596,7 +33596,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = {
     data: function data() {
         return {
-            carslist: []
+            carslist: [],
+            flag: true
         };
     },
     created: function created() {
@@ -33627,12 +33628,21 @@ exports.default = {
             //    console.log(e,i);
             this.carslist.splice(i, 1);
             this.$store.commit('removeForcar', e);
+        },
+        selectedChange: function selectedChange(id, selected) {
+            // console.log(id,selected);
+            this.$store.commit('upcarselected', { id: id, selected: selected });
         }
     },
     components: {
         numbox: _shopcar_numbox2.default
     }
 }; //
+//
+//
+//
+//
+//
 //
 //
 //
@@ -34850,16 +34860,38 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
 
 exports.default = {
   data: function data() {
-    return {};
+    return {
+      flag: false
+    };
   },
   created: function created() {
     localStorage.setItem('interface', 'http://vue.studyit.io');
     // let tt=localStorage.getItem('carNum')
     // this.$store.state.count=localStorage.getItem('car')
     // console.log(tt);
+    this.flag = this.$route.path === "/home" ? false : true;
+  },
+
+  methods: {
+    returnback: function returnback() {
+      this.$router.go(-1);
+    }
+  },
+  watch: {
+    "$route.path": function $routePath(newVal) {
+      if (newVal === "/home") {
+        this.flag = false;
+      } else {
+        this.flag = true;
+      }
+    }
   }
 };
 
@@ -34963,11 +34995,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // 入口文件
 _vue2.default.use(_vuex2.default);
-
-// 每次刚进入 网站，肯定会 调用 main.js 在刚调用的时候，先从本地存储中，把 购物车的数据读出来，放到 store 中
+// 引入rem布局
 
 
 // 导入vuex
+function getRem() {
+    var html = document.getElementsByTagName("html")[0];
+    var oWidth = document.body.clientWidth || document.documentElement.clientWidth;
+    html.style.fontSize = oWidth / 3.75 + "px";
+}
+window.onload = function () {
+    getRem();
+    window.addEventListener("resize", getRem, false);
+};
+// 每次刚进入 网站，肯定会 调用 main.js 在刚调用的时候，先从本地存储中，把 购物车的数据读出来，放到 store 中
 var car = JSON.parse(localStorage.getItem('car') || '[]');
 
 var store = new _vuex2.default.Store({
@@ -35010,6 +35051,16 @@ var store = new _vuex2.default.Store({
                 }
             });
             localStorage.setItem('car', (0, _stringify2.default)(state.car));
+        },
+        upcarselected: function upcarselected(state, info) {
+            state.car.some(function (item) {
+                // console.log(state.car[0].selected);
+                if (item.id === info.id) {
+                    item.selected = info.selected;
+                    return true;
+                }
+            });
+            localStorage.setItem('car', (0, _stringify2.default)(state.car));
         }
     },
     getters: {
@@ -35026,6 +35077,26 @@ var store = new _vuex2.default.Store({
             var o = {};
             state.car.forEach(function (item) {
                 o[item.id] = item.count;
+            });
+            return o;
+        },
+        getjiesuan: function getjiesuan(state) {
+            var o = {};
+            state.car.forEach(function (item) {
+                o[item.id] = item.selected;
+            });
+            return o;
+        },
+        getzongjia: function getzongjia(state) {
+            var o = {
+                count: 0,
+                money: 0
+            };
+            state.car.forEach(function (item) {
+                if (item.selected) {
+                    o.count += item.count;
+                    o.money += parseInt(item.count * item.price);
+                }
             });
             return o;
         }
@@ -43360,7 +43431,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.shop_container[data-v-21acea58] {\n  background-color: #eee;\n  overflow: hidden;\n}\n.good_list[data-v-21acea58] {\n  display: flex;\n  justify-content: space-around;\n}\n.good_list img[data-v-21acea58] {\n  height: 60px;\n  width: 60px;\n  /* margin:0 2px; */\n}\n.good_list .info[data-v-21acea58] {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n}\n.good_list .info p[data-v-21acea58] {\n  margin-bottom: 0;\n}\n.good_list .info p span[data-v-21acea58] {\n  color: red;\n  font-weight: bold;\n}\n.good_list .info h1[data-v-21acea58] {\n  font-weight: bold;\n  font-size: 13px;\n}\n", ""]);
+exports.push([module.i, "\n.shop_container[data-v-21acea58] {\n  background-color: #eee;\n  overflow: hidden;\n}\n.jiesuan[data-v-21acea58] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n.jiesuan .red[data-v-21acea58] {\n  color: red;\n}\n.good_list[data-v-21acea58] {\n  display: flex;\n  justify-content: space-around;\n}\n.good_list img[data-v-21acea58] {\n  height: 0.6rem;\n  width: 0.6rem;\n  align-self: center;\n  /* margin:0 auto; */\n}\n.good_list .info[data-v-21acea58] {\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n}\n.good_list .info p[data-v-21acea58] {\n  margin-bottom: 0;\n}\n.good_list .info p span[data-v-21acea58] {\n  color: red;\n  font-weight: bold;\n}\n.good_list .info h1[data-v-21acea58] {\n  font-weight: bold;\n  font-size: 0.13rem;\n}\n", ""]);
 
 // exports
 
@@ -44372,7 +44443,23 @@ var render = function() {
             "div",
             { staticClass: "mui-card-content-inner good_list" },
             [
-              _c("mt-switch"),
+              _c("mt-switch", {
+                on: {
+                  change: function($event) {
+                    return _vm.selectedChange(
+                      item.id,
+                      _vm.$store.getters.getjiesuan[item.id]
+                    )
+                  }
+                },
+                model: {
+                  value: _vm.$store.getters.getjiesuan[item.id],
+                  callback: function($$v) {
+                    _vm.$set(_vm.$store.getters.getjiesuan, item.id, $$v)
+                  },
+                  expression: "$store.getters.getjiesuan[item.id]"
+                }
+              }),
               _vm._v(" "),
               _c("img", { attrs: { src: item.thumb_path, alt: "" } }),
               _vm._v(" "),
@@ -44414,25 +44501,40 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _vm._m(0)
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mui-card" }, [
+    _c("div", { staticClass: "mui-card" }, [
       _c("div", { staticClass: "mui-card-content" }, [
-        _c("div", { staticClass: "mui-card-content-inner" }, [
-          _vm._v(
-            "\n                这是一个最简单的卡片视图控件；卡片视图常用来显示完整独立的一段信息，比如一篇文章的预览图、作者信息、点赞数量等\n            "
-          )
-        ])
+        _vm.flag
+          ? _c(
+              "div",
+              { staticClass: "mui-card-content-inner jiesuan" },
+              [
+                _c("div", { staticClass: "left" }, [
+                  _c("p", [_vm._v("总计(不含运费)")]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v("已勾选商品 "),
+                    _c("span", { staticClass: "red" }, [
+                      _vm._v(_vm._s(_vm.$store.getters.getzongjia.count))
+                    ]),
+                    _vm._v(" 件，总价 "),
+                    _c("span", { staticClass: "red" }, [
+                      _vm._v(_vm._s(_vm.$store.getters.getzongjia.money))
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("mt-button", { attrs: { type: "danger" } }, [
+                  _vm._v("去结算")
+                ])
+              ],
+              1
+            )
+          : _vm._e()
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -46332,7 +46434,30 @@ var render = function() {
     "div",
     { staticClass: "app-container" },
     [
-      _c("mt-header", { attrs: { fixed: "", title: "嘉时代" } }),
+      _c("mt-header", { attrs: { fixed: "", title: "嘉时代" } }, [
+        _c(
+          "a",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.flag,
+                expression: "flag"
+              }
+            ],
+            attrs: { slot: "left" },
+            on: {
+              click: function($event) {
+                return _vm.returnback()
+              }
+            },
+            slot: "left"
+          },
+          [_c("mt-button", { attrs: { icon: "back" } }, [_vm._v("返回")])],
+          1
+        )
+      ]),
       _vm._v(" "),
       _c("transition", [_c("router-view")], 1),
       _vm._v(" "),

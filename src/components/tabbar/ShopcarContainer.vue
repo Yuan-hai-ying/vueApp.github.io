@@ -3,7 +3,8 @@
         <div class="mui-card">
             <div class="mui-card-content">
                 <div class="mui-card-content-inner good_list" v-for="(item,i) in carslist">
-                    <mt-switch></mt-switch>
+                    <mt-switch v-model="$store.getters.getjiesuan[item.id]"
+                        @change="selectedChange(item.id,$store.getters.getjiesuan[item.id])"></mt-switch>
                     <img :src="item.thumb_path" alt="">
                     <div class="info">
                         <h1>{{item.title}}</h1>
@@ -18,8 +19,12 @@
         </div>
         <div class="mui-card">
             <div class="mui-card-content">
-                <div class="mui-card-content-inner">
-                    这是一个最简单的卡片视图控件；卡片视图常用来显示完整独立的一段信息，比如一篇文章的预览图、作者信息、点赞数量等
+                <div class="mui-card-content-inner jiesuan" v-if="flag">
+                    <div class="left">
+                        <p>总计(不含运费)</p>
+                        <p>已勾选商品 <span class="red">{{$store.getters.getzongjia.count}}</span> 件，总价 <span class="red">{{$store.getters.getzongjia.money}}</span></p>
+                    </div>
+                    <mt-button type="danger">去结算</mt-button>
                 </div>
             </div>
         </div>
@@ -30,7 +35,8 @@
         export default {
             data() {
                 return {
-                    carslist:[]
+                    carslist: [],
+                    flag:true
                 }
             },
             created() {
@@ -54,10 +60,14 @@
                         }
                     })
                 },
-                remove(e,i){
-                //    console.log(e,i);
-                this.carslist.splice(i,1)
-                this.$store.commit('removeForcar',e)
+                remove(e, i) {
+                    //    console.log(e,i);
+                    this.carslist.splice(i, 1)
+                    this.$store.commit('removeForcar', e)
+                },
+                selectedChange(id, selected) {
+                    // console.log(id,selected);
+                    this.$store.commit('upcarselected',{id,selected:selected})
                 }
 
             },
@@ -72,14 +82,25 @@
             overflow: hidden;
         }
 
+        .jiesuan {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .red {
+                color: red;
+            }
+        }
+
         .good_list {
             display: flex;
             justify-content: space-around;
 
             img {
-                height: 60px;
-                width:60px;
-                /* margin:0 2px; */
+                height: 0.6rem;
+                width: 0.6rem;
+                align-self: center;
+                /* margin:0 auto; */
             }
 
             .info {
@@ -98,7 +119,7 @@
 
                 h1 {
                     font-weight: bold;
-                    font-size: 13px;
+                    font-size: 0.13rem;
                 }
             }
         }

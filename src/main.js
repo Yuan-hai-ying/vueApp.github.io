@@ -4,13 +4,22 @@ import Vue from 'vue'
 // 导入vuex
 import Vuex from 'vuex'
 Vue.use(Vuex)
-
+// 引入rem布局
+function getRem() {
+    var html = document.getElementsByTagName("html")[0];
+    var oWidth = document.body.clientWidth || document.documentElement.clientWidth;
+    html.style.fontSize = oWidth / 3.75 + "px";
+}
+window.onload = function () {
+    getRem();
+    window.addEventListener("resize", getRem, false);
+}
 // 每次刚进入 网站，肯定会 调用 main.js 在刚调用的时候，先从本地存储中，把 购物车的数据读出来，放到 store 中
 var car = JSON.parse(localStorage.getItem('car') || '[]')
 
 var store = new Vuex.Store({
     state: {
-        car:car,
+        car: car,
     },
     mutations: {
         addcar(state, goodsinfo) {
@@ -18,7 +27,7 @@ var store = new Vuex.Store({
             var flag = false;
             state.car.some(item => {
                 if (item.id === goodsinfo.id) {
-                    item.count +=parseInt(goodsinfo.count)
+                    item.count += parseInt(goodsinfo.count)
                     flag = true;
                     return true;
                 }
@@ -26,24 +35,34 @@ var store = new Vuex.Store({
             if (flag == false) {
                 state.car.push(goodsinfo)
             }
-            
-             // 当 更新 car 之后，把 car 数组，存储到 本地的 localStorage 中
+
+            // 当 更新 car 之后，把 car 数组，存储到 本地的 localStorage 中
             localStorage.setItem('car', JSON.stringify(state.car))
         },
-        updateGoodsInfo(state,goodsinfo){
-            state.car.some(item=>{
-                if(item.id===goodsinfo.id){
-                    item.count=parseInt(goodsinfo.count)
+        updateGoodsInfo(state, goodsinfo) {
+            state.car.some(item => {
+                if (item.id === goodsinfo.id) {
+                    item.count = parseInt(goodsinfo.count)
                     return true;
                 }
             })
             localStorage.setItem('car', JSON.stringify(state.car))
         },
-        removeForcar(state,id){
-            state.car.some((item,i)=>{
+        removeForcar(state, id) {
+            state.car.some((item, i) => {
                 // console.log(item);
-                if(item.id===id){
-                    state.car.splice(i,1)
+                if (item.id === id) {
+                    state.car.splice(i, 1)
+                    return true;
+                }
+            })
+            localStorage.setItem('car', JSON.stringify(state.car))
+        },
+        upcarselected(state,info){
+            state.car.some((item) => {
+                // console.log(state.car[0].selected);
+                if (item.id ===info.id) {
+                    item.selected=info.selected
                     return true;
                 }
             })
@@ -54,16 +73,36 @@ var store = new Vuex.Store({
     getters: { // this.$store.getters.***
         // 相当于 计算属性，也相当于 filters
         getAllCount(state) {
-          var c = 0;
-          state.car.forEach(item => {
-            c += item.count
-          })
-          return c
+            var c = 0;
+            state.car.forEach(item => {
+                c += item.count
+            })
+            return c
         },
-        getcarCount(state){
-            var o={}
-            state.car.forEach(item=>{
-                o[item.id]=item.count
+        getcarCount(state) {
+            var o = {}
+            state.car.forEach(item => {
+                o[item.id] = item.count
+            })
+            return o
+        },
+        getjiesuan(state){
+            var o = {}
+            state.car.forEach(item => {
+                o[item.id] = item.selected
+            })
+            return o
+        },
+        getzongjia(state){
+            var o = {
+                count:0,
+                money:0
+            }
+            state.car.forEach(item => {
+               if(item.selected){
+                 o.count+=item.count
+                 o.money+=parseInt(item.count*item.price)
+               }
             })
             return o
         }

@@ -2,7 +2,11 @@
   <div class="app-container">
 
     <!-- 顶部 Header 区域 -->
-    <mt-header fixed title="嘉时代"></mt-header>
+    <mt-header fixed title="嘉时代">
+      <a slot="left" @click="returnback()" v-show="flag">
+        <mt-button icon="back">返回</mt-button>
+      </a>
+    </mt-header>
 
 
     <!-- 中间的 路由 router-view 区域 -->
@@ -40,7 +44,7 @@
   export default {
     data() {
       return {
-
+          flag:false
       }
     },
     created() {
@@ -48,6 +52,22 @@
       // let tt=localStorage.getItem('carNum')
       // this.$store.state.count=localStorage.getItem('car')
       // console.log(tt);
+      this.flag = this.$route.path === "/home" ? false : true;
+
+    },
+    methods: {
+      returnback(){
+          this.$router.go(-1);
+      }
+    },
+    watch: {
+      "$route.path":function(newVal){
+        if(newVal==="/home"){
+          this.flag = false;
+        }else {
+          this.flag=true;
+        }
+      }
     },
   }
 </script>
