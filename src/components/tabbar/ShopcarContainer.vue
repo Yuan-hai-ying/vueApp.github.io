@@ -22,7 +22,8 @@
                 <div class="mui-card-content-inner jiesuan" v-if="flag">
                     <div class="left">
                         <p>总计(不含运费)</p>
-                        <p>已勾选商品 <span class="red">{{$store.getters.getzongjia.count}}</span> 件，总价 <span class="red">{{$store.getters.getzongjia.money}}</span></p>
+                        <p>已勾选商品 <span class="red">{{$store.getters.getzongjia.count}}</span> 件，总价 <span
+                                class="red">{{$store.getters.getzongjia.money}}</span></p>
                     </div>
                     <mt-button type="danger">去结算</mt-button>
                 </div>
@@ -31,12 +32,16 @@
     </div>
     </template>
     <script>
+        import {
+            MessageBox,
+            Toast
+        } from 'mint-ui';
         import numbox from "../subcomponents/shopcar_numbox.vue";
         export default {
             data() {
                 return {
                     carslist: [],
-                    flag:true
+                    flag: true,
                 }
             },
             created() {
@@ -61,13 +66,36 @@
                     })
                 },
                 remove(e, i) {
-                    //    console.log(e,i);
-                    this.carslist.splice(i, 1)
-                    this.$store.commit('removeForcar', e)
+                    const htmls = `
+                    <div class="box">
+                        <div class="isunbind">是否删除该商品？</div>
+                    </div>`
+                    MessageBox({
+                        title: '',
+                        message: htmls,
+                        showCancelButton: true,
+                        cancelButtonClass: 'cancelButton',
+                        confirmButtonClass: 'confirmButton',
+                        confirmButtonText: '确定',
+                        cancelButtonText: '暂不'
+                    }).then(action => {
+                        if (action == 'confirm') {
+                            this.carslist.splice(i, 1)
+                            this.$store.commit('removeForcar', e)
+                            Toast({
+                                message: '操作成功',
+                                iconClass: 'mui-icon mui-icon-checkmarkempty',
+                                duration: 1000,
+                            });
+                        }
+                    }).catch(err => {});
                 },
                 selectedChange(id, selected) {
                     // console.log(id,selected);
-                    this.$store.commit('upcarselected',{id,selected:selected})
+                    this.$store.commit('upcarselected', {
+                        id,
+                        selected: selected
+                    })
                 }
 
             },
@@ -77,6 +105,29 @@
         }
     </script>
     <style lang="less" scoped>
+        .cancelButton {
+            background: #959595 !important;
+            width: 30px !important;
+            height: 20px;
+            color: #fff !important;
+            /* border-radius: .05rem; */
+            border: none;
+            /* margin: .2rem !important; */
+        }
+
+        .confirmButton {
+            background: #d9534f !important;
+            width: 30px !important;
+            height: 20px;
+            color: #fff !important;
+            /* border-radius: .05rem; */
+            border: none;
+            /* margin: .2rem !important; */
+        }
+
+        .mint-msgbox-message .box .isunbind {
+            color: #000000 !important;
+        }
         .shop_container {
             background-color: #eee;
             overflow: hidden;
